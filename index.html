@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kharch Kaabu - Personal Finance Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="app" style="position:relative;min-height:100vh">
+
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="wordmark">Kharch Kaabu<span>.</span></div>
+    <div class="nav-tabs">
+      <div class="nav-tab active" onclick="showPage('overview',this)">Overview</div>
+      <div class="nav-tab" onclick="showPage('transactions',this)">Transactions</div>
+      <div class="nav-tab" onclick="showPage('insights',this)">Insights</div>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div id="rolePill" class="role-pill role-admin" onclick="toggleRole()">
+      <span id="roleIcon" style="font-size:9px">✦</span>
+      <span id="roleText">Admin</span>
+    </div>
+    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
+      <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="3"/><path d="M8 1v1.5M8 13.5V15M1 8h1.5M13.5 8H15M3.4 3.4l1.1 1.1M11.5 11.5l1.1 1.1M3.4 12.6l1.1-1.1M11.5 4.5l1.1-1.1"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- OVERVIEW -->
+<div id="page-overview" class="page active">
+  <div class="overview-layout">
+    <div class="overview-main">
+      <div class="hero-section">
+        <div class="hero-label">Net balance</div>
+        <div class="hero-number" id="heroNum">₹0</div>
+        <div class="hero-sub" id="heroSub">Loading...</div>
+      </div>
+      <div class="metrics-strip" id="metricsStrip"></div>
+      <div class="chart-section-title">Balance trend</div>
+      <div class="chart-wrap" id="lineWrap"><canvas id="lineChart"></canvas></div>
+      <div class="chart-empty" id="lineEmpty" style="display:none">No transaction data yet</div>
+    </div>
+    <div class="overview-side">
+      <div>
+        <div class="side-title">By category</div>
+        <div class="donut-wrap" id="donutWrap"><canvas id="donutChart"></canvas></div>
+        <div class="chart-empty" id="donutEmpty" style="display:none;height:160px">No expenses recorded</div>
+        <div class="donut-legend" id="donutLegend"></div>
+      </div>
+      <div class="savings-meter" id="savingsMeter"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TRANSACTIONS -->
+<div id="page-transactions" class="page">
+  <div class="tx-page-layout">
+    <div class="tx-main">
+      <div class="tx-toolbar">
+        <input class="search-input" id="searchInput" placeholder="Search transactions..." oninput="renderFeed()">
+        <select class="filter-select" id="typeFilter" onchange="renderFeed()">
+          <option value="">All</option>
+          <option value="income">Income</option>
+          <option value="expense">Expense</option>
+        </select>
+        <select class="filter-select" id="catFilter" onchange="renderFeed()"><option value="">All categories</option></select>
+        <select class="filter-select" id="dateFilter" onchange="renderFeed()">
+          <option value="">All time</option>
+          <option value="30">Last 30 days</option>
+          <option value="90">Last 3 months</option>
+          <option value="180">Last 6 months</option>
+        </select>
+        <button class="btn-csv" onclick="exportCSV()">Export CSV</button>
+        <button class="btn-add" id="addBtn" onclick="openModal()">+ Add</button>
+      </div>
+      <div class="sort-row">
+        <div style="font-size:11px;color:var(--text3);align-self:center;margin-right:4px">Sort:</div>
+        <button class="sort-btn active" id="sb-date" onclick="setSort('date')">Date</button>
+        <button class="sort-btn" id="sb-amount" onclick="setSort('amount')">Amount</button>
+        <button class="sort-btn" id="sb-category" onclick="setSort('category')">Category</button>
+        <button class="sort-btn" id="sb-description" onclick="setSort('description')">Name</button>
+        <span style="margin-left:auto;font-size:11px;color:var(--text3)" id="txCount"></span>
+      </div>
+      <div class="feed" id="txFeed"></div>
+    </div>
+    <div class="tx-side" id="txSide"></div>
+  </div>
+</div>
+
+<!-- INSIGHTS -->
+<div id="page-insights" class="page">
+  <div class="ins-layout" id="insLayout"></div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<!-- DELETE MODAL -->
+<div id="delModal" style="display:none;position:absolute;inset:0;z-index:150;min-height:100%">
+  <div class="modal-backdrop">
+    <div class="modal" style="max-width:320px">
+      <div class="modal-title">Delete entry?</div>
+      <div style="font-size:12px;color:var(--text2);margin-bottom:4px">This action cannot be undone.</div>
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="closeDelModal()">Cancel</button>
+        <button style="padding:7px 16px;font-size:12px;border-radius:7px;background:var(--red);color:#fff;font-weight:500" onclick="confirmDel()">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD/EDIT MODAL -->
+<div id="txModal" style="display:none;position:absolute;inset:0;z-index:150;min-height:100%">
+  <div class="modal-backdrop" onclick="if(event.target===this)closeModal()">
+    <div class="modal">
+      <div class="modal-title" id="modalTitle">New transaction</div>
+      <div class="form-group">
+        <label class="form-label">Description</label>
+        <input class="form-input" id="fDesc" placeholder="e.g. Grocery run">
+        <div class="field-err" id="eDesc">Enter a description</div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Amount (₹)</label>
+          <input class="form-input" id="fAmount" type="number" min="1" placeholder="0">
+          <div class="field-err" id="eAmount">Enter valid amount</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Date</label>
+          <input class="form-input" id="fDate" type="date">
+          <div class="field-err" id="eDate">Select a date</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Type</label>
+          <select class="form-input" id="fType"><option value="expense">Expense</option><option value="income">Income</option></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Category</label>
+          <select class="form-input" id="fCat">
+            <option>Food</option><option>Shopping</option><option>Bills</option>
+            <option>Travel</option><option>Health</option><option>Entertainment</option>
+            <option>Salary</option><option>Freelance</option><option>Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+        <button class="btn-save" onclick="saveTx()">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
