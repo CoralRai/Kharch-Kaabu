@@ -6,7 +6,7 @@ A clean, interactive, and responsive personal finance dashboard built with vanil
 
 ## 🚀 Live Demo
 
-[View Live Demo](https://your-github-username.github.io/kharch-kaabu/)
+[View Live Demo](https://coralrai.github.io/Kharch-Kaabu/)
 
 ## 📋 Overview
 
@@ -74,8 +74,8 @@ kharch-kaabu/
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/your-github-username/kharch-kaabu.git
-   cd kharch-kaabu
+   git clone https://github.com/CoralRai/Kharch-Kaabu.git
+   cd Kharch-Kaabu
    ```
 
 2. **Open in browser**
