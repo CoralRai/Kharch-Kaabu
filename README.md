@@ -1,52 +1,27 @@
-# Kharch Kaabu - Personal Finance Dashboard
+# Kharch Kaabu - Finance Dashboard UI
 
-A clean, interactive, and responsive personal finance dashboard built with vanilla JavaScript, HTML, and CSS. Track your income, expenses, and spending patterns with beautiful visualizations and intuitive controls.
+A simple finance dashboard for tracking income and expenses.
 
-![Kharch Kaabu Dashboard](https://via.placeholder.com/800x400/2A7A5A/FFFFFF?text=Kharch+Kaabu+Dashboard)
+This project demonstrates basic frontend development skills with HTML, CSS, and JavaScript.
 
-## 🚀 Live Demo
+## Features
 
-[View Live Demo](https://coralrai.github.io/Kharch-Kaabu/)
+- Dashboard with financial summary
+- Transaction management
+- Charts for spending analysis
+- Responsive design
 
-## 📋 Overview
+## Tech Stack
 
-This project was built to demonstrate frontend development skills for a finance dashboard assignment. It provides users with a comprehensive view of their financial activity through interactive charts, transaction management, and insightful analytics.
+- HTML
+- CSS
+- JavaScript
 
-## ✨ Features
+## How to Run
 
-### 🏠 Dashboard Overview
-- **Financial Summary**: Net balance, total income, and total expenses
-- **Balance Trend Chart**: Time-based visualization of balance changes over months
-- **Category Breakdown**: Donut chart showing spending distribution by category
-- **Savings Rate Meter**: Visual indicator of savings performance
+Open index.html in a web browser.
 
-### 💳 Transactions Management
-- **Transaction List**: Complete view of all income and expense entries
-- **Advanced Filtering**: Filter by type (income/expense), category, and date range
-- **Search Functionality**: Real-time search through transaction descriptions
-- **Sorting Options**: Sort by date, amount, category, or description
-- **CRUD Operations**: Add, edit, and delete transactions (Admin role)
-
-### 👥 Role-Based Access
-- **Admin Mode**: Full access to add, edit, and delete transactions
-- **Viewer Mode**: Read-only access to view all data
-- **Role Toggle**: Easy switching between roles for demonstration
-
-### 📊 Insights & Analytics
-- **Top Spending Category**: Identify your biggest expense category
-- **Month-over-Month Comparison**: Track spending trends
-- **Savings Rate Analysis**: Monitor financial health
-- **Average Transaction Values**: Understand spending patterns
-- **Category-wise Breakdown**: Detailed spending analysis
-
-### 🎨 User Experience
-- **Dark/Light Theme**: Complete theme switching with smooth transitions
-- **Responsive Design**: Optimized for desktop, tablet, and mobile devices
-- **Data Persistence**: All data saved locally using browser storage
-- **Export Functionality**: Download transaction data as CSV
-- **Empty States**: Graceful handling of no data scenarios
-
-## 🛠️ Technologies Used
+This project fulfills the frontend assignment requirements.
 
 - **Frontend**: Vanilla JavaScript (ES6+)
 - **Styling**: CSS3 with CSS Variables for theming
